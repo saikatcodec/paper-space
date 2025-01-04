@@ -6,7 +6,7 @@ from sqlmodel import select
 
 from app.db import get_session
 from app.admin.models import Publications, Profile
-from app.admin.schemas import Url
+from app.admin.schemas import Url, ProfileUpdate
 
 admin_router = APIRouter()
 services = Services()
@@ -89,10 +89,50 @@ async def get_profile(
         session.add(profile)
         await session.commit()
 
-        return {"data": profile}
+        return {"msg": "Profile Added Successfully", "data": profile}
 
     except Exception as e:
         print(f"Error getting profile: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.patch("/update_profile/{profile_id}")
+async def update_profile(
+    profile_id: str,
+    profile_update: ProfileUpdate | None = None,
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    Asynchronously updates a user profile in the database.
+    Args:
+        profile_id (str): The unique identifier of the profile to update.
+        profile_update (ProfileUpdate): The Pydantic model containing the profile update data.
+        session (AsyncSession, optional): The database session. Defaults to Depends(get_session).
+    Returns:
+        dict: A dictionary containing the updated profile data under the 'data' key.
+    """
+    try:
+        profile_db = await session.get(Profile, profile_id)
+        if not profile_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found"
+            )
+
+        if profile_update is None:
+            profile_update = await services.get_profile()
+
+        profile_data = profile_update.model_dump(exclude_unset=True)
+        profile_db.sqlmodel_update(profile_data)
+        session.add(profile_db)
+        await session.commit()
+        await session.refresh(profile_db)
+
+        return {"msg": "Profile Update Successfully", "data": profile_db}
+    except Exception as e:
+        print(f"Error updating profile: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error",

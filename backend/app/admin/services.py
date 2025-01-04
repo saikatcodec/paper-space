@@ -2,7 +2,7 @@ from playwright.async_api import async_playwright
 from parsel import Selector
 import random
 
-from app.admin.schemas import Publications, Profile
+from app.admin.schemas import Publications, ProfileCreate
 
 
 class Services:
@@ -122,7 +122,7 @@ class Services:
                 ".nova-legacy-e-list__item.nova-legacy-v-entity-item__info-section-list-item span::text"
             ).get()
 
-            return Profile(
+            return ProfileCreate(
                 name=name,
                 profile_pic=profile_pic,
                 total_pub=total_pub,

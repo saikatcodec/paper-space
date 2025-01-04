@@ -1,4 +1,5 @@
 from sqlmodel import Field, SQLModel, Column
+from pydantic import EmailStr
 from sqlalchemy.dialects.postgresql import JSON
 import uuid
 
@@ -22,4 +23,6 @@ class Profile(SQLModel, table=True):
     department: str
     address: str
     position: str
+    phone: str | None = None
+    email: EmailStr | None = None
     skills: list[str] = Field(sa_column=Column(JSON, default=list, nullable=False))

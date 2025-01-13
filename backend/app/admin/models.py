@@ -1,6 +1,8 @@
 from sqlmodel import Field, SQLModel, Column
 from pydantic import EmailStr
 from sqlalchemy.dialects.postgresql import JSON
+from datetime import date
+from sqlalchemy import Date
 import uuid
 
 
@@ -9,7 +11,8 @@ class Publications(SQLModel, table=True):
     title: str
     link: str
     types: list[str] = Field(sa_column=Column(JSON, default=list, nullable=False))
-    pub_date: str
+    pub_date: date = Field(sa_type=Date)
+    pub_date_str: str
 
 
 class Profile(SQLModel, table=True):

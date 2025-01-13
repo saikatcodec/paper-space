@@ -3,6 +3,7 @@ from parsel import Selector
 import random
 
 from app.admin.schemas import Publications, ProfileCreate
+from .utils import parse_date
 
 
 class Services:
@@ -55,7 +56,13 @@ class Services:
                 ).get()
 
                 research_list.append(
-                    Publications(title=tls, link=link, types=types, pub_date=pub_date)
+                    Publications(
+                        title=tls,
+                        link=link,
+                        types=types,
+                        pub_date=parse_date(pub_date),
+                        pub_date_str=pub_date,
+                    )
                 )
 
         except Exception as e:
@@ -140,3 +147,22 @@ class Services:
             selector = None
         finally:
             await self.close()
+
+    async def get_publication_details(self, url: str):
+        try:
+            await self.initialize()
+            await self.page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            await self.page.wait_for_timeout(random.randint(2000, 5000))  # Random delay
+
+            content = await self.page.content()
+            selector = Selector(text=content)
+
+            pub_abstract = selector.css(".chakra-text.css-8oiimb::text").get()
+
+            return {"abstract": pub_abstract}
+
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            await self.close()
+            # pass

@@ -1,11 +1,13 @@
 from pydantic import BaseModel, EmailStr
+from datetime import date
 
 
 class Publications(BaseModel):
     title: str
     link: str
     types: list[str]
-    pub_date: str
+    pub_date: date
+    pub_date_str: str
 
 
 class Url(BaseModel):

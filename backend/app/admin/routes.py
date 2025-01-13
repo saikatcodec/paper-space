@@ -137,3 +137,36 @@ async def update_profile(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error",
         )
+
+
+@admin_router.post("/pub_details")
+async def get_publication_details(
+    url: Url | None = None, session: AsyncSession = Depends(get_session)
+):
+    """
+    Fetches publication details from a given URL.
+    Args:
+        url (Url | None): Optional URL object containing the source URL for publications.
+        session (AsyncSession): Database session dependency.
+    Returns:
+        dict: Dictionary containing:
+            - size (int): Number of new publications added
+            - data (list): List of newly added Publication objects
+    """
+    try:
+        content = await services.get_publication_details(
+            url="https://www.researchgate.net/publication/384768946_Numerical_Analysis_Utilizing_a_MIM_Plasmonic_Sensor_for_the_Detection_of_Various_Bacteria"
+        )
+
+        if not content:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="No content found"
+            )
+
+        return {"data": content}
+    except Exception as e:
+        print(f"Error fetching publication details: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )

@@ -154,16 +154,17 @@ async def get_publication_details(
             - data (list): List of newly added Publication objects
     """
     try:
-        content = await services.get_publication_details(
-            url="https://www.researchgate.net/publication/384768946_Numerical_Analysis_Utilizing_a_MIM_Plasmonic_Sensor_for_the_Detection_of_Various_Bacteria"
-        )
+        url = "https://www.researchgate.net/publication/384768946_Numerical_Analysis_Utilizing_a_MIM_Plasmonic_Sensor_for_the_Detection_of_Various_Bacteria"
+        content = await services.get_publication_details(url=url)
 
         if not content:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="No content found"
             )
 
-        return {"data": content}
+        references = await services.get_publication_ref(url=url + "/references")
+
+        return {"data": content, "references": references}
     except Exception as e:
         print(f"Error fetching publication details: {e}")
         raise HTTPException(

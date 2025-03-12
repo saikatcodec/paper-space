@@ -165,4 +165,37 @@ class Services:
             print(f"Error: {e}")
         finally:
             await self.close()
-            # pass
+
+    async def get_publication_ref(self, url: str):
+        try:
+            await self.initialize()
+            await self.page.goto(url, wait_until="domcontentloaded", timeout=60000)
+            await self.page.wait_for_timeout(random.randint(2000, 5000))  # Random delay
+
+            content = await self.page.content()
+            selector = Selector(text=content)
+
+            refs_card = selector.css(".chakra-card__body.css-1u34fbw")
+            refs = refs_card.css(".css-1fym809")
+            references = []
+            for ref in refs:
+                title = ref.css(".chakra-link.chakra-heading.css-ozdm72::text").get()
+                link = ref.css(
+                    ".chakra-link.chakra-heading.css-ozdm72::attr(href)"
+                ).get()
+                authors_card = ref.css(".chakra-stack.css-13nqvds")
+                author_name = []
+                authors_n = authors_card.css(".chakra-link.css-95mnk0")
+                for author in authors_n:
+                    author_name.append(author.css("::text").get())
+
+                references.append(
+                    {"title": title, "link": link, "authors": author_name}
+                )
+
+            return references
+
+        except Exception as e:
+            print(f"Error: {e}")
+        finally:
+            await self.close()

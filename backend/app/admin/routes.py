@@ -20,6 +20,9 @@ from app.admin.schemas import (
     Token,
     AdminUserCreate,
     AdminUserResponse,
+    Publications as PublicationCreate,
+    ProfileCreate,
+    PaperCreate,
 )
 from app.admin.auth import (
     SECRET_KEY,
@@ -360,3 +363,130 @@ async def register_admin(
     await session.refresh(db_admin)
 
     return db_admin
+
+
+@admin_router.post("/direct/add_publications")
+async def add_publications_direct(
+    publications: list[PublicationCreate],
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Add publication data directly from JSON payload.
+    """
+    try:
+        db_publications = [Publications(**pub.model_dump()) for pub in publications]
+        new_publications = []
+
+        for pub in db_publications:
+            statement = select(Publications).where(Publications.link == pub.link)
+            result = await session.exec(statement)
+            result = result.first()
+
+            if not result:
+                new_publications.append(pub)
+
+        session.add_all(new_publications)
+        await session.commit()
+
+        return {"size": len(new_publications), "data": new_publications}
+
+    except Exception as e:
+        print(f"Error adding publications: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.post("/direct/add_profile")
+async def add_profile_direct(
+    profile_data: ProfileCreate,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Add profile data directly from JSON payload.
+    """
+    try:
+        profile = Profile(**profile_data.model_dump())
+        session.add(profile)
+        await session.commit()
+        await session.refresh(profile)
+
+        return {"msg": "Profile Added Successfully", "data": profile}
+
+    except Exception as e:
+        print(f"Error adding profile: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.patch("/direct/update_profile/{profile_id}")
+async def update_profile_direct(
+    profile_id: str,
+    profile_update: ProfileUpdate,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Update profile with provided data directly.
+    """
+    try:
+        profile_db = await session.get(Profile, profile_id)
+        if not profile_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found"
+            )
+
+        profile_data = profile_update.model_dump(exclude_unset=True)
+        profile_db.sqlmodel_update(profile_data)
+        session.add(profile_db)
+        await session.commit()
+        await session.refresh(profile_db)
+
+        return {"msg": "Profile Updated Successfully", "data": profile_db}
+    except Exception as e:
+        print(f"Error updating profile: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.post("/direct/add_paper")
+async def add_paper_direct(
+    paper_data: PaperCreate,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Add paper details directly from JSON payload.
+    """
+    try:
+        paper = Paper(**paper_data.model_dump())
+
+        statement = select(Paper).where(Paper.link == paper.link)
+        result = await session.exec(statement)
+        result = result.first()
+
+        if result:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST, detail="Paper already exists"
+            )
+
+        session.add(paper)
+        await session.commit()
+        await session.refresh(paper)
+
+        return {"message": "Paper added successfully", "data": paper}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error adding paper details: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )

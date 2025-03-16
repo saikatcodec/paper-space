@@ -2,7 +2,7 @@ from playwright.async_api import async_playwright
 from parsel import Selector
 import random
 
-from app.admin.schemas import Publications, ProfileCreate
+from app.admin.schemas import Publications, ProfileCreate, PaperCreate, Reference
 from .utils import parse_date
 
 
@@ -16,7 +16,9 @@ class Services:
     async def initialize(self):
         self.playwright = await async_playwright().start()
         self.browser = await self.playwright.chromium.launch(
-            headless=True, args=["--disable-blink-features=AutomationControlled"]
+            headless=True,
+            args=["--disable-blink-features=AutomationControlled"],
+            timeout=300000,
         )
         context = await self.browser.new_context(
             user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36"
@@ -157,9 +159,38 @@ class Services:
             content = await self.page.content()
             selector = Selector(text=content)
 
+            # Get title
+            pub_title = selector.css(".chakra-heading.css-oum85n::text").get()
+            # Get abstract
             pub_abstract = selector.css(".chakra-text.css-8oiimb::text").get()
+            # Get references
+            ref = await self.get_publication_ref(url=url + "/references")
+            # Get publication date
+            date_card = selector.css(".chakra-stack.css-1gw3h41")
+            pub_date = date_card.css(".chakra-text.css-okc7pe::text").get()
+            # Get read count
+            cite_read_card = selector.css(".chakra-stack.css-19gn7nw")
+            read_count = cite_read_card[1].css(".chakra-text.css-1wq4449::text").get()
+            # Get citation count
+            cite_count = cite_read_card[0].css(".chakra-text.css-1wq4449::text").get()
+            # Get author details
+            authors_card_holder = selector.css(".css-14t9xag")
+            authors_card = authors_card_holder.css(".chakra-stack.css-13nqvds")
+            author_name = []
+            authors_n = authors_card.css(".chakra-link.css-95mnk0")
+            for author in authors_n:
+                author_name.append(author.css("::text").get())
 
-            return {"abstract": pub_abstract}
+            return PaperCreate(
+                title=pub_title,
+                abstract=pub_abstract,
+                link=url,
+                citation_count=cite_count,
+                read_count=read_count,
+                pub_date=pub_date,
+                authors=author_name,
+                references=ref,
+            )
 
         except Exception as e:
             print(f"Error: {e}")
@@ -190,7 +221,7 @@ class Services:
                     author_name.append(author.css("::text").get())
 
                 references.append(
-                    {"title": title, "link": link, "authors": author_name}
+                    Reference(title=title, link=link, authors=author_name)
                 )
 
             return references

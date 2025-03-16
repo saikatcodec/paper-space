@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 from datetime import date
 
@@ -40,3 +41,43 @@ class ProfileUpdate(BaseModel):
     skills: list[str] | None = None
     phone: str | None = None
     email: EmailStr | None = None
+
+
+class Reference(BaseModel):
+    title: str
+    link: str
+    authors: list[str]
+
+
+class PaperCreate(BaseModel):
+    title: str
+    abstract: str | None = None
+    citation_count: str
+    read_count: str
+    pub_date: str
+    link: str
+    authors: list[str]
+    references: list[Reference] | None = None
+
+
+class Token(BaseModel):
+    access_token: str
+    refresh_token: str
+    token_type: str = "bearer"
+
+
+class TokenData(BaseModel):
+    username: Optional[str] = None
+
+
+class AdminUserCreate(BaseModel):
+    username: str
+    email: EmailStr
+    password: str
+
+
+class AdminUserResponse(BaseModel):
+    id: int
+    username: str
+    email: str
+    is_active: bool

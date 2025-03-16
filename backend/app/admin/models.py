@@ -1,3 +1,4 @@
+from typing import Optional
 from sqlmodel import Field, SQLModel, Column
 from pydantic import EmailStr
 from sqlalchemy.dialects.postgresql import JSON
@@ -29,3 +30,23 @@ class Profile(SQLModel, table=True):
     phone: str | None = None
     email: EmailStr | None = None
     skills: list[str] = Field(sa_column=Column(JSON, default=list, nullable=False))
+
+
+class Paper(SQLModel, table=True):
+    id: uuid.UUID = Field(primary_key=True, default_factory=uuid.uuid4)
+    title: str
+    abstract: str | None = None
+    link: str
+    citation_count: str
+    read_count: str
+    pub_date: str
+    authors: list[str] = Field(sa_column=Column(JSON, default=list, nullable=False))
+    references: list[dict] = Field(sa_column=Column(JSON, default=list, nullable=True))
+
+
+class AdminUser(SQLModel, table=True):
+    id: Optional[int] = Field(default=None, primary_key=True)
+    username: str = Field(unique=True, index=True)
+    email: str = Field(unique=True, index=True)
+    hashed_password: str
+    is_active: bool = Field(default=True)

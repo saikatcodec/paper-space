@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import AdminLayout from "./components/AdminLayout";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const Crawler = () => {
   const [url, setUrl] = useState("");
@@ -9,6 +10,8 @@ const Crawler = () => {
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const { refreshToken } = useAuth();
+
+  usePageTitle("Publication Crawler | Admin");
 
   const fetchPublications = async (e) => {
     e.preventDefault();

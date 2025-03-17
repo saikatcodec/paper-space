@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/api";
 import AdminLayout from "./components/AdminLayout";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const PublicationsManager = () => {
+  usePageTitle("Manage Publications | Admin");
+
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

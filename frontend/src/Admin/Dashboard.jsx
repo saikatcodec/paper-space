@@ -2,8 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import api from "../utils/api";
 import AdminLayout from "./components/AdminLayout";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const AdminDashboard = () => {
+  usePageTitle("Admin Dashboard");
+
   const [stats, setStats] = useState({
     totalPublications: 0,
     recentPublications: [],

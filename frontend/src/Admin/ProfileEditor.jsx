@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminLayout from "./components/AdminLayout";
 import api from "../utils/api";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const ProfileEditor = () => {
   const [profile, setProfile] = useState({
@@ -33,7 +34,7 @@ const ProfileEditor = () => {
   const [success, setSuccess] = useState(null);
   const [newInterest, setNewInterest] = useState("");
   const [previewImage, setPreviewImage] = useState(null);
-
+  usePageTitle("Edit Researcher Profile | Admin");
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -185,31 +186,31 @@ const ProfileEditor = () => {
         </div>
 
         {error && (
-          <div className="mx-4 mb-4 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
+          <div className="mx-6 mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="mx-4 mb-4 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
+          <div className="mx-6 mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded">
             {success}
           </div>
         )}
 
         <div className="border-t border-gray-200">
-          <form onSubmit={handleSubmit} className="p-4 sm:p-6">
-            <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-6 sm:gap-x-6">
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8">
+            <div className="grid grid-cols-1 gap-y-8 sm:grid-cols-6 sm:gap-x-8">
               {/* Profile Image */}
               <div className="sm:col-span-6">
                 <label
                   htmlFor="profile_pic"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Profile Image
                 </label>
                 <div className="mt-1 flex items-center">
                   <div className="relative">
-                    <div className="h-24 w-24 rounded-full overflow-hidden bg-gray-100">
+                    <div className="h-28 w-28 rounded-full overflow-hidden bg-gray-100">
                       {previewImage ? (
                         <img
                           src={previewImage}
@@ -248,7 +249,7 @@ const ProfileEditor = () => {
                   </div>
                   <button
                     type="button"
-                    className="ml-5 bg-white py-2 px-3 border border-gray-300 rounded-md shadow-sm text-sm leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="ml-5 bg-white py-2.5 px-4 border border-gray-300 rounded-md shadow-sm text-base leading-4 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                     onClick={() =>
                       document.getElementById("profile_pic").click()
                     }
@@ -262,7 +263,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Full Name
                 </label>
@@ -273,7 +274,7 @@ const ProfileEditor = () => {
                     id="name"
                     value={profile.name || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -281,7 +282,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="position"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Title / Position
                 </label>
@@ -292,7 +293,7 @@ const ProfileEditor = () => {
                     id="position"
                     value={profile.position || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -300,7 +301,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-6">
                 <label
                   htmlFor="bio"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Bio
                 </label>
@@ -311,7 +312,7 @@ const ProfileEditor = () => {
                     rows={4}
                     value={profile.bio || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
                 <p className="mt-2 text-sm text-gray-500">
@@ -322,7 +323,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Email address
                 </label>
@@ -333,7 +334,7 @@ const ProfileEditor = () => {
                     type="email"
                     value={profile.email || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -341,7 +342,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="institution"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Institution
                 </label>
@@ -352,7 +353,7 @@ const ProfileEditor = () => {
                     id="institution"
                     value={profile.institution || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -360,7 +361,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="department"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Department
                 </label>
@@ -371,7 +372,7 @@ const ProfileEditor = () => {
                     id="department"
                     value={profile.department || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -379,7 +380,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="address"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Address
                 </label>
@@ -390,7 +391,7 @@ const ProfileEditor = () => {
                     id="address"
                     value={profile.address || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -398,7 +399,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="phone"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Phone
                 </label>
@@ -409,7 +410,7 @@ const ProfileEditor = () => {
                     id="phone"
                     value={profile.phone || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -417,7 +418,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="website"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Website
                 </label>
@@ -428,7 +429,7 @@ const ProfileEditor = () => {
                     id="website"
                     value={profile.website || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -443,7 +444,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="total_pub"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Total Publications
                 </label>
@@ -454,7 +455,7 @@ const ProfileEditor = () => {
                     id="total_pub"
                     value={profile.total_pub || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -462,7 +463,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="reads"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Total Reads
                 </label>
@@ -473,7 +474,7 @@ const ProfileEditor = () => {
                     id="reads"
                     value={profile.reads || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -481,7 +482,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-2">
                 <label
                   htmlFor="total_citations"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Total Citations
                 </label>
@@ -492,7 +493,7 @@ const ProfileEditor = () => {
                     id="total_citations"
                     value={profile.total_citations || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -507,7 +508,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="social_links.github"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   GitHub
                 </label>
@@ -518,7 +519,7 @@ const ProfileEditor = () => {
                     id="social_links.github"
                     value={profile.social_links?.github || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -526,7 +527,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="social_links.twitter"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Twitter
                 </label>
@@ -537,7 +538,7 @@ const ProfileEditor = () => {
                     id="social_links.twitter"
                     value={profile.social_links?.twitter || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -545,7 +546,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="social_links.linkedin"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   LinkedIn
                 </label>
@@ -556,7 +557,7 @@ const ProfileEditor = () => {
                     id="social_links.linkedin"
                     value={profile.social_links?.linkedin || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -564,7 +565,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="social_links.researchgate"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   ResearchGate
                 </label>
@@ -575,7 +576,7 @@ const ProfileEditor = () => {
                     id="social_links.researchgate"
                     value={profile.social_links?.researchgate || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -583,7 +584,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-3">
                 <label
                   htmlFor="social_links.googlescholar"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Google Scholar
                 </label>
@@ -594,7 +595,7 @@ const ProfileEditor = () => {
                     id="social_links.googlescholar"
                     value={profile.social_links?.googlescholar || ""}
                     onChange={handleInputChange}
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
               </div>
@@ -603,7 +604,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-6">
                 <label
                   htmlFor="research_interests"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Research Interests
                 </label>
@@ -642,12 +643,12 @@ const ProfileEditor = () => {
                     value={newInterest}
                     onChange={(e) => setNewInterest(e.target.value)}
                     placeholder="Add a research interest"
-                    className="focus:ring-blue-500 focus:border-blue-500 flex-1 block w-full rounded-none rounded-l-md sm:text-sm border-gray-300"
+                    className="focus:ring-blue-500 focus:border-blue-500 flex-1 block w-full rounded-none rounded-l-md text-base border-gray-300 px-4 py-2.5"
                   />
                   <button
                     type="button"
                     onClick={addResearchInterest}
-                    className="inline-flex items-center px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 sm:text-sm"
+                    className="inline-flex items-center px-3 py-2.5 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-gray-500 text-base"
                   >
                     Add
                   </button>
@@ -658,7 +659,7 @@ const ProfileEditor = () => {
               <div className="sm:col-span-6">
                 <label
                   htmlFor="skills"
-                  className="block text-sm font-medium text-gray-700"
+                  className="block text-base font-medium text-gray-700 mb-2"
                 >
                   Skills
                 </label>
@@ -679,7 +680,7 @@ const ProfileEditor = () => {
                       }));
                     }}
                     placeholder="Enter skills separated by commas"
-                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full text-base border-gray-300 rounded-md px-4 py-2.5"
                   />
                 </div>
                 <p className="mt-1 text-sm text-gray-500">
@@ -689,17 +690,17 @@ const ProfileEditor = () => {
               </div>
             </div>
 
-            <div className="pt-6 flex justify-end">
+            <div className="pt-8 flex justify-end">
               <button
                 type="button"
-                className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="bg-white py-2.5 px-5 border border-gray-300 rounded-md shadow-sm text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSaving}
-                className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="ml-4 inline-flex justify-center py-2.5 px-5 border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 {isSaving ? "Saving..." : "Save"}
               </button>

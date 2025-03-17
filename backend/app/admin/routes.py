@@ -11,7 +11,7 @@ from starlette import status
 from sqlmodel import select
 
 from app.db import get_session, engine  # Import engine from db.py
-from app.admin.models import Publications, Profile, Paper, AdminUser
+from app.admin.models import Publications, Profile, Paper, AdminUser, News
 from app.admin.schemas import (
     Url,
     ProfileUpdate,
@@ -22,6 +22,8 @@ from app.admin.schemas import (
     ProfileCreate,
     PaperCreate,
     PaperUpdate,
+    NewsCreate,
+    NewsUpdate,
 )
 from app.admin.auth import (
     SECRET_KEY,
@@ -576,6 +578,146 @@ async def delete_paper(
         return {"msg": "Paper Deleted Successfully", "data": paper_db}
     except Exception as e:
         print(f"Error deleting paper: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.get("/news", response_model=list[News])
+async def get_all_news(
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Get all news items (admin only).
+    """
+    try:
+        statement = select(News).order_by(News.publish_date.desc())
+        result = await session.exec(statement)
+        news = result.all()
+        return news
+    except Exception as e:
+        print(f"Error fetching news: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.post("/news", response_model=News)
+async def create_news(
+    news_data: NewsCreate,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Create a new news item (admin only).
+    """
+    try:
+        news_dict = news_data.model_dump()
+        news_dict["publish_date"] = parse_date(news_data.publish_date)
+        news_dict["publish_date_str"] = news_data.publish_date
+
+        news = News(**news_dict)
+        session.add(news)
+        await session.commit()
+        await session.refresh(news)
+
+        return news
+    except Exception as e:
+        print(f"Error creating news: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.get("/news/{news_id}", response_model=News)
+async def get_news(
+    news_id: str,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Get a specific news item by ID (admin only).
+    """
+    try:
+        news = await session.get(News, news_id)
+        if not news:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="News not found"
+            )
+        return news
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error fetching news: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.patch("/news/{news_id}", response_model=News)
+async def update_news(
+    news_id: str,
+    news_update: NewsUpdate,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Update a news item (admin only).
+    """
+    try:
+        news = await session.get(News, news_id)
+        if not news:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="News not found"
+            )
+
+        update_data = news_update.model_dump(exclude_unset=True)
+
+        if "publish_date" in update_data:
+            update_data["publish_date"] = parse_date(update_data["publish_date"])
+            update_data["publish_date_str"] = news_update.publish_date
+
+        news.sqlmodel_update(update_data)
+        session.add(news)
+        await session.commit()
+        await session.refresh(news)
+
+        return news
+    except Exception as e:
+        print(f"Error updating news: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.delete("/news/{news_id}")
+async def delete_news(
+    news_id: str,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Delete a news item (admin only).
+    """
+    try:
+        news = await session.get(News, news_id)
+        if not news:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="News not found"
+            )
+
+        await session.delete(news)
+        await session.commit()
+
+        return {"msg": "News deleted successfully"}
+    except Exception as e:
+        print(f"Error deleting news: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error",

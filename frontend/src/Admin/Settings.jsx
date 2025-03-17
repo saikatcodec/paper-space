@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminLayout from "./components/AdminLayout";
 import api from "../utils/api";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const Settings = () => {
   const [formData, setFormData] = useState({
@@ -26,7 +27,7 @@ const Settings = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSavingPass, setIsSavingPass] = useState(false);
   const [isSavingSettings, setIsSavingSettings] = useState(false);
-
+  usePageTitle("Site Settings | Admin");
   useEffect(() => {
     const fetchSiteSettings = async () => {
       try {

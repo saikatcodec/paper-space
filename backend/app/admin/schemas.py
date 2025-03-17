@@ -93,3 +93,21 @@ class AdminUserResponse(BaseModel):
     username: str
     email: str
     is_active: bool
+
+
+class NewsCreate(BaseModel):
+    title: str
+    content: str
+    publish_date: str
+    image_url: Optional[str] = None
+    news_type: str = "announcement"  # announcement, upcoming_paper, project, event
+    is_featured: bool = False
+
+
+class NewsUpdate(BaseModel):
+    title: Optional[str] = None
+    content: Optional[str] = None
+    publish_date: Optional[str] = None
+    image_url: Optional[str] = None
+    news_type: Optional[str] = None
+    is_featured: Optional[bool] = None

@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 import ScrollableSection from "../components/Scrollable";
 import homeCover from "../assets/home_cover.png";
+import NewsScrollable from "../components/NewsScrollable";
 
 const HomePage = () => {
+  usePageTitle("Research Home");
+
   const [researchData, setResearchData] = useState([]);
+  const [newsData, setNewsData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/user/get_all_research"
-        );
-        setResearchData(response.data);
+        const [researchResponse, newsResponse] = await Promise.all([
+          axios.get("http://127.0.0.1:8000/user/get_all_research"),
+          axios.get("http://127.0.0.1:8000/user/news"),
+        ]);
+
+        setResearchData(researchResponse.data);
+        setNewsData(newsResponse.data);
       } catch (error) {
-        console.error("Error fetching research data:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
@@ -26,8 +33,6 @@ const HomePage = () => {
 
     fetchData();
   }, []);
-
-  const comingSoonContent = Array(10).fill("Coming Soon");
 
   return (
     <div className="flex flex-col gap-6 p-6 justify-center bg-gray-100">
@@ -59,29 +64,17 @@ const HomePage = () => {
             viewAllLink="/publications"
           />
         )}
-      </div>
 
-      <div className="flex justify-around pt-2">
-        {/* Scrollable Projects Section */}
-        {/* <ScrollableSection
-          title="Projects"
-          content={comingSoonContent}
-          viewAllLink="/projects"
-        /> */}
-
-        {/* Scrollable Upcoming Projects Section */}
-        {/* <ScrollableSection
-          title="Upcoming Projects"
-          content={comingSoonContent}
-          viewAllLink="/upcoming-projects"
-        /> */}
-
-        {/* Scrollable Upcoming Publications Section */}
-        {/* <ScrollableSection
-          title="Upcoming Publications"
-          content={comingSoonContent}
-          viewAllLink="/upcoming-publications"
-        /> */}
+        {/* News Section */}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <NewsScrollable
+            title="Latest News & Updates"
+            content={newsData}
+            viewAllLink="/news"
+          />
+        )}
       </div>
     </div>
   );

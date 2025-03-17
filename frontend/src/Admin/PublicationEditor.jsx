@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import AdminLayout from "./components/AdminLayout";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const PublicationEditor = () => {
   const { id } = useParams();
@@ -33,7 +34,7 @@ const PublicationEditor = () => {
     "Preprint",
     "Other",
   ];
-
+  usePageTitle("Add New Publication | Admin");
   useEffect(() => {
     // If we're in edit mode, fetch the publication data
     if (isEditMode) {

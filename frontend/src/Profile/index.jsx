@@ -1,8 +1,11 @@
 // Import necessary modules
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const ProfilePage = () => {
+  usePageTitle("Researcher Profile");
+
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

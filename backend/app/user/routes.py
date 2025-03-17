@@ -5,7 +5,7 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db import get_session
-from app.admin.models import Publications, Profile, Paper
+from app.admin.models import News, Publications, Profile, Paper
 
 user_router = APIRouter()
 
@@ -92,6 +92,46 @@ async def get_paper_by_id(
 
     except Exception as e:
         print(f"Error fetching publication: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@user_router.get("/news", response_model=list[News])
+async def get_all_news(session: AsyncSession = Depends(get_session)):
+    """
+    Get all news items, ordered by publish date descending.
+    """
+    try:
+        statement = select(News).order_by(News.publish_date.desc())
+        result = await session.exec(statement)
+        news = result.all()
+        return news
+    except Exception as e:
+        print(f"Error fetching news: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@user_router.get("/news/{news_id}", response_model=News)
+async def get_news_by_id(news_id: str, session: AsyncSession = Depends(get_session)):
+    """
+    Get a specific news item by ID.
+    """
+    try:
+        news = await session.get(News, news_id)
+        if not news:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="News not found"
+            )
+        return news
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error fetching news: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error",

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { usePageTitle } from "../hooks/usePageTitle";
 
 const AdminLogin = () => {
   const [username, setUsername] = useState("");
@@ -8,6 +9,8 @@ const AdminLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { login, error } = useAuth();
   const navigate = useNavigate();
+
+  usePageTitle("Admin Login");
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
+import { usePageTitle } from "../hooks/usePageTitle";
+import api from "../utils/api";
 
 const PublicationDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [paper, setPaper] = useState(null);
+  const [publication, setPublication] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -15,37 +16,38 @@ const PublicationDetail = () => {
   };
 
   useEffect(() => {
-    const fetchPaperDetails = async () => {
+    const fetchPublication = async () => {
       try {
-        const response = await axios.get(
-          `http://127.0.0.1:8000/user/paper/${id}`
-        );
-        setPaper(response.data);
-      } catch (err) {
-        console.error("Error fetching paper details:", err);
-        setError("Failed to load paper details");
+        const response = await api.get(`/user/paper/${id}`);
+        setPublication(response.data);
+      } catch (error) {
+        console.error("Error fetching publication:", error);
+        setError("Failed to load publication details");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchPaperDetails();
+    fetchPublication();
   }, [id]);
+
+  // Dynamic title that updates once data is loaded
+  usePageTitle(publication ? publication.title : "Publication Details");
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
-        <p className="ml-3">Loading paper details...</p>
+        <p className="ml-3">Loading publication details...</p>
       </div>
     );
   }
 
-  if (error || !paper) {
+  if (error || !publication) {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-          <p>{error || "Paper not found"}</p>
+          <p>{error || "Publication not found"}</p>
         </div>
         <button
           onClick={handleGoBack}
@@ -58,8 +60,8 @@ const PublicationDetail = () => {
   }
 
   // Format the publication date if available
-  const formattedDate = paper.pub_date
-    ? new Date(paper.pub_date).toLocaleDateString("en-US", {
+  const formattedDate = publication.pub_date
+    ? new Date(publication.pub_date).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -90,11 +92,11 @@ const PublicationDetail = () => {
         </button>
       </div>
 
-      {/* Paper Details Card */}
+      {/* Publication Details Card */}
       <div className="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-200">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-700 to-blue-500 px-6 py-4">
-          <h1 className="text-2xl font-bold text-white">{paper.title}</h1>
+          <h1 className="text-2xl font-bold text-white">{publication.title}</h1>
         </div>
 
         <div className="p-6">
@@ -133,7 +135,7 @@ const PublicationDetail = () => {
                     d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
                   />
                 </svg>
-                Citations: {paper.citation_count || "0"}
+                Citations: {publication.citation_count || "0"}
               </span>
               <span className="flex items-center">
                 <svg
@@ -156,7 +158,7 @@ const PublicationDetail = () => {
                     d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                   />
                 </svg>
-                Reads: {paper.read_count || "0"}
+                Reads: {publication.read_count || "0"}
               </span>
             </div>
           </div>
@@ -167,8 +169,8 @@ const PublicationDetail = () => {
               Authors
             </h2>
             <div className="flex flex-wrap gap-2">
-              {paper.authors &&
-                paper.authors.map((author, index) => (
+              {publication.authors &&
+                publication.authors.map((author, index) => (
                   <span
                     key={index}
                     className="bg-gray-100 px-3 py-1 rounded-full text-sm text-gray-700"
@@ -186,20 +188,20 @@ const PublicationDetail = () => {
             </h2>
             <div className="bg-gray-50 p-4 rounded-md">
               <p className="text-gray-700">
-                {paper.abstract || "No abstract available"}
+                {publication.abstract || "No abstract available"}
               </p>
             </div>
           </div>
 
           {/* References */}
-          {paper.references && paper.references.length > 0 && (
+          {publication.references && publication.references.length > 0 && (
             <div className="mb-6">
               <h2 className="text-lg font-semibold text-gray-800 mb-2">
-                References ({paper.references.length})
+                References ({publication.references.length})
               </h2>
               <div className="bg-gray-50 p-4 rounded-md">
                 <ol className="list-decimal pl-5">
-                  {paper.references.map((reference, index) => (
+                  {publication.references.map((reference, index) => (
                     <li key={index} className="mb-2 text-sm text-gray-700">
                       {reference.title ||
                         reference.text ||
@@ -213,9 +215,9 @@ const PublicationDetail = () => {
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-4 mt-8">
-            {paper.link && (
+            {publication.link && (
               <a
-                href={paper.link}
+                href={publication.link}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded flex items-center transition-colors"

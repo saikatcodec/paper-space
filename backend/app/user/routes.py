@@ -78,12 +78,18 @@ async def get_paper_by_id(
         result = await session.exec(statement)
         paper = result.first()
 
-        if not paper:
+        statement = select(Publications).where(Publications.id == paper.id)
+        result = await session.exec(statement)
+        publication = result.first()
+
+        if not paper or not publication:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Paper not found"
             )
 
-        return paper
+        combined = {**paper.__dict__, **publication.__dict__}
+        return combined
+
     except Exception as e:
         print(f"Error fetching publication: {e}")
         raise HTTPException(

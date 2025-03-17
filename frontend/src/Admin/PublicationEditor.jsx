@@ -13,11 +13,9 @@ const PublicationEditor = () => {
     authors: "",
     abstract: "",
     pub_date_str: "",
-    publication: "",
     link: "",
-    doi: "",
     types: [],
-    keywords: "",
+    // Removed publication, doi, and keywords fields
   });
 
   const [loading, setLoading] = useState(isEditMode);
@@ -41,7 +39,7 @@ const PublicationEditor = () => {
     if (isEditMode) {
       const fetchPublication = async () => {
         try {
-          const response = await api.get(`/admin/publications/${id}`);
+          const response = await api.get(`/user/paper/${id}`);
           const publication = response.data;
 
           setFormData({
@@ -49,11 +47,9 @@ const PublicationEditor = () => {
             authors: publication.authors?.join(", ") || "",
             abstract: publication.abstract || "",
             pub_date_str: publication.pub_date_str || "",
-            publication: publication.publication || "",
             link: publication.link || "",
-            doi: publication.doi || "",
             types: publication.types || [],
-            keywords: publication.keywords?.join(", ") || "",
+            // Removed publication, doi, and keywords fields
           });
 
           setLoading(false);
@@ -96,10 +92,7 @@ const PublicationEditor = () => {
           .split(",")
           .map((a) => a.trim())
           .filter((a) => a),
-        keywords: formData.keywords
-          .split(",")
-          .map((k) => k.trim())
-          .filter((k) => k),
+        // Removed keywords processing
       };
 
       if (isEditMode) {
@@ -228,24 +221,6 @@ const PublicationEditor = () => {
 
                 <div className="col-span-6 sm:col-span-3">
                   <label
-                    htmlFor="publication"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Publication Venue
-                  </label>
-                  <input
-                    type="text"
-                    name="publication"
-                    id="publication"
-                    value={formData.publication}
-                    onChange={handleChange}
-                    placeholder="Journal or Conference name"
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  />
-                </div>
-
-                <div className="col-span-6 sm:col-span-3">
-                  <label
                     htmlFor="link"
                     className="block text-sm font-medium text-gray-700"
                   >
@@ -258,24 +233,6 @@ const PublicationEditor = () => {
                     value={formData.link}
                     onChange={handleChange}
                     placeholder="https://"
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  />
-                </div>
-
-                <div className="col-span-6 sm:col-span-3">
-                  <label
-                    htmlFor="doi"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    DOI
-                  </label>
-                  <input
-                    type="text"
-                    name="doi"
-                    id="doi"
-                    value={formData.doi}
-                    onChange={handleChange}
-                    placeholder="10.xxxx/xxxxx"
                     className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
                   />
                 </div>
@@ -306,23 +263,7 @@ const PublicationEditor = () => {
                   </div>
                 </div>
 
-                <div className="col-span-6">
-                  <label
-                    htmlFor="keywords"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Keywords (comma-separated)
-                  </label>
-                  <input
-                    type="text"
-                    name="keywords"
-                    id="keywords"
-                    value={formData.keywords}
-                    onChange={handleChange}
-                    placeholder="machine learning, artificial intelligence, etc."
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-                  />
-                </div>
+                {/* Removed Publication Venue, DOI, and Keywords sections */}
               </div>
             </div>
 

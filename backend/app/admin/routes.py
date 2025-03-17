@@ -6,7 +6,6 @@ from jose import JWTError, jwt
 
 from app.admin.services import Services
 
-# from app.admin.selenium_services import Services
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.orm import sessionmaker
 from starlette import status

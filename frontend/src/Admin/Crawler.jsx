@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
+import AdminLayout from "./components/AdminLayout";
 
 const Crawler = () => {
   const [url, setUrl] = useState("");
@@ -64,52 +65,54 @@ const Crawler = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-6">Publication Crawler</h1>
+    <AdminLayout>
+      <div className="container mx-auto p-4">
+        <h1 className="text-2xl font-bold mb-6">Publication Crawler</h1>
 
-      {message && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
-          {message}
-        </div>
-      )}
-
-      {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-          {error}
-        </div>
-      )}
-
-      <div className="bg-white p-6 rounded shadow-md">
-        <form onSubmit={fetchPublications}>
-          <div className="mb-4">
-            <label
-              htmlFor="url"
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
-              ResearchGate Profile URL (Optional)
-            </label>
-            <input
-              type="text"
-              id="url"
-              placeholder="https://www.researchgate.net/profile/Example_Profile"
-              className="w-full px-3 py-2 border border-gray-300 rounded"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-            />
+        {message && (
+          <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+            {message}
           </div>
+        )}
 
-          <button
-            type="submit"
-            className={`bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={loading}
-          >
-            {loading ? "Fetching Publications..." : "Fetch Publications"}
-          </button>
-        </form>
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {error}
+          </div>
+        )}
+
+        <div className="bg-white p-6 rounded shadow-md">
+          <form onSubmit={fetchPublications}>
+            <div className="mb-4">
+              <label
+                htmlFor="url"
+                className="block text-gray-700 text-sm font-bold mb-2"
+              >
+                ResearchGate Profile URL (Optional)
+              </label>
+              <input
+                type="text"
+                id="url"
+                placeholder="https://www.researchgate.net/profile/Example_Profile"
+                className="w-full px-3 py-2 border border-gray-300 rounded"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+              />
+            </div>
+
+            <button
+              type="submit"
+              className={`bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 focus:outline-none ${
+                loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+              disabled={loading}
+            >
+              {loading ? "Fetching Publications..." : "Fetch Publications"}
+            </button>
+          </form>
+        </div>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

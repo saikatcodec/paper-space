@@ -11,6 +11,8 @@ const PublicationsManager = () => {
   const [filterType, setFilterType] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  const [updatingId, setUpdatingId] = useState(null); // Track which publication is being updated
+  const [updateMessage, setUpdateMessage] = useState(null); // Status message for update operations
 
   useEffect(() => {
     const fetchPublications = async () => {
@@ -70,6 +72,57 @@ const PublicationsManager = () => {
     }
   };
 
+  // Handle publication update
+  const handleUpdate = async (publication) => {
+    // Check if publication has a link property
+    if (!publication.link) {
+      setUpdateMessage({
+        type: "error",
+        text: "This publication doesn't have a URL to update from.",
+      });
+      setTimeout(() => setUpdateMessage(null), 5000);
+      return;
+    }
+
+    try {
+      setUpdatingId(publication.id);
+
+      // Make the API call to update publication details
+      const response = await api.post("/admin/pub_details", {
+        url: publication.link,
+      });
+
+      // Update the local publications state with new data
+      if (response.data) {
+        setPublications((prevPubs) =>
+          prevPubs.map((pub) =>
+            pub.id === publication.id ? { ...pub, ...response.data } : pub
+          )
+        );
+
+        setUpdateMessage({
+          type: "success",
+          text: "Publication metadata successfully updated",
+        });
+      } else {
+        setUpdateMessage({
+          type: "warning",
+          text: "No changes were made to the publication",
+        });
+      }
+    } catch (err) {
+      console.error("Error updating publication:", err);
+      setUpdateMessage({
+        type: "error",
+        text: err.response?.data?.detail || "Failed to update publication",
+      });
+    } finally {
+      setUpdatingId(null);
+      // Clear success message after 5 seconds
+      setTimeout(() => setUpdateMessage(null), 5000);
+    }
+  };
+
   if (loading) {
     return (
       <AdminLayout>
@@ -109,6 +162,21 @@ const PublicationsManager = () => {
             Add New Publication
           </Link>
         </div>
+
+        {/* Add status message */}
+        {updateMessage && (
+          <div
+            className={`px-4 py-3 border-l-4 ${
+              updateMessage.type === "success"
+                ? "bg-green-50 border-green-500 text-green-700"
+                : updateMessage.type === "warning"
+                ? "bg-yellow-50 border-yellow-500 text-yellow-700"
+                : "bg-red-50 border-red-500 text-red-700"
+            }`}
+          >
+            <p>{updateMessage.text}</p>
+          </div>
+        )}
 
         {/* Search and Filter */}
         <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
@@ -245,20 +313,51 @@ const PublicationsManager = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex space-x-2">
-                        <a
-                          href={publication.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
+                        <Link
+                          to={"/publications/" + publication.id}
                           className="text-blue-600 hover:text-blue-900"
                         >
                           View
-                        </a>
+                        </Link>
                         <Link
                           to={`/admin/publications/edit/${publication.id}`}
                           className="text-indigo-600 hover:text-indigo-900"
                         >
                           Edit
                         </Link>
+                        <button
+                          onClick={() => handleUpdate(publication)}
+                          className="text-green-600 hover:text-green-900"
+                          disabled={updatingId === publication.id}
+                        >
+                          {updatingId === publication.id ? (
+                            <span className="flex items-center">
+                              <svg
+                                className="animate-spin -ml-1 mr-2 h-4 w-4 text-green-600"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
+                                ></circle>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                ></path>
+                              </svg>
+                              Updating
+                            </span>
+                          ) : (
+                            "Update"
+                          )}
+                        </button>
                         <button
                           onClick={() => handleDelete(publication.id)}
                           className="text-red-600 hover:text-red-900"

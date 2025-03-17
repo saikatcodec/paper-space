@@ -19,8 +19,8 @@ const AdminLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
-      {/* Sidebar */}
-      <div className="w-64 bg-blue-800 text-white">
+      {/* Sidebar - Fixed position */}
+      <div className="w-64 bg-blue-800 text-white fixed h-full z-30 top-0 left-0 overflow-y-auto">
         <div className="p-4 border-b border-blue-700">
           <h2 className="text-xl font-bold">PaperSpace Admin</h2>
           <p className="text-sm text-blue-300">Research Management</p>
@@ -163,8 +163,8 @@ const AdminLayout = ({ children }) => {
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 overflow-y-auto">
+      {/* Main Content - With left margin to make space for sidebar */}
+      <div className="flex-1 ml-64">
         <header className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
             <h1 className="text-lg leading-6 font-semibold text-gray-900">
@@ -179,7 +179,7 @@ const AdminLayout = ({ children }) => {
           </div>
         </header>
 
-        <main className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+        <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           {children}
         </main>
       </div>

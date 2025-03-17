@@ -138,7 +138,7 @@ async def get_profile(
 
 @admin_router.patch("/update_profile/{profile_id}")
 async def update_profile(
-    profile_id: str,
+    profile_id: str | None = None,
     profile_update: ProfileUpdate | None = None,
     session: AsyncSession = Depends(get_session),
     current_admin: AdminUser = Depends(
@@ -155,13 +155,15 @@ async def update_profile(
         dict: A dictionary containing the updated profile data under the 'data' key.
     """
     try:
-        profile_db = await session.get(Profile, profile_id)
+        if profile_id:
+            profile_db = await session.get(Profile, profile_id)
+        
         if not profile_db:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="Profile not found"
             )
 
-        if profile_update is None:
+        if profile_update is None or not profile_id:
             profile_update = await services.get_profile()
 
         profile_data = profile_update.model_dump(exclude_unset=True)

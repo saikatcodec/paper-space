@@ -5,6 +5,7 @@ import { usePageTitle } from "../hooks/usePageTitle";
 
 const ProfileEditor = () => {
   const [profile, setProfile] = useState({
+    id: "",
     name: "",
     position: "",
     bio: "",
@@ -144,7 +145,7 @@ const ProfileEditor = () => {
         }
       });
 
-      await api.put("/admin/update_profile", formData, {
+      await api.patch(`/admin/update_profile/${profile.id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

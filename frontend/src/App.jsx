@@ -6,6 +6,7 @@ import HomePage from "./Home/index";
 import Navbar from "./components/Navbar";
 import PublicationsPage from "./Publications/index";
 import ProjectsPage from "./Projects/index";
+import PublicationDetail from "./Publications/PublicationDetail";
 
 // Admin components
 import AdminLayout from "./Admin/components/AdminLayout";
@@ -50,6 +51,15 @@ function App() {
               <>
                 <Navbar />
                 <PublicationsPage />
+              </>
+            }
+          />
+          <Route
+            path="/publications/:id"
+            element={
+              <>
+                <Navbar />
+                <PublicationDetail />
               </>
             }
           />

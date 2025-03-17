@@ -1,10 +1,11 @@
+import uuid
 from fastapi import APIRouter, Depends, HTTPException
 from starlette import status
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from app.db import get_session
-from app.admin.models import Publications, Profile
+from app.admin.models import Publications, Profile, Paper
 
 user_router = APIRouter()
 
@@ -52,6 +53,39 @@ async def get_all_research(session: AsyncSession = Depends(get_session)):
         return publications
     except Exception as e:
         print(f"Error fetching publications: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@user_router.get("/paper/{paper_id}")
+async def get_paper_by_id(
+    paper_id: uuid.UUID, session: AsyncSession = Depends(get_session)
+):
+    """
+    Retrieve a research publication by its ID.
+
+    Args:
+        paper_id (int): Publication ID.
+        session (AsyncSession): Database session dependency.
+
+    Returns:
+        Publication: Publication object.
+    """
+    try:
+        statement = select(Paper).where(Paper.id == paper_id)
+        result = await session.exec(statement)
+        paper = result.first()
+
+        if not paper:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Paper not found"
+            )
+
+        return paper
+    except Exception as e:
+        print(f"Error fetching publication: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error",

@@ -15,7 +15,7 @@ function Scrollable({ title, content, viewAllLink }) {
             className="p-3 border-y hover:bg-gray-100 transition"
           >
             <h3 className="font-semibold text-slate-700 hover:text-blue-800 text-sm">
-              <Link to={`/publication/${item.id}`}>{item.title}</Link>
+              <Link to={`/publications/${item.id}`}>{item.title}</Link>
             </h3>
             <p className="text-gray-500 text-xs">{item.pub_date_str}</p>
           </div>

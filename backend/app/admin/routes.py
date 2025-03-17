@@ -34,6 +34,7 @@ from app.admin.auth import (
     REFRESH_TOKEN_EXPIRE_DAYS,
     ALGORITHM,
 )
+from app.admin.utils import parse_date
 
 admin_router = APIRouter()
 services = Services()
@@ -210,6 +211,13 @@ async def get_publication_details(
         statement = select(Paper).where(Paper.link == papers.link)
         result = await session.exec(statement)
         result = result.first()
+
+        statement = select(Publications).where(Publications.link == papers.link)
+        result1 = await session.exec(statement)  # Check if publication exists
+        result1 = result1.first()
+        if result1:
+            papers.id = result1.id
+
         if not result:
             session.add(papers)
             await session.commit()
@@ -480,6 +488,17 @@ async def add_paper_direct(
         session.add(paper)
         await session.commit()
         await session.refresh(paper)
+
+        publications = Publications(
+            id=paper.id,
+            title=paper.title,
+            link=paper.link,
+            types=["paper"],
+            pub_date=parse_date(paper.pub_date),
+            pub_date_str=paper.pub_date,
+        )
+        session.add(publications)
+        await session.commit()
 
         return {"message": "Paper added successfully", "data": paper}
     except HTTPException:

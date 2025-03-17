@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import ProfilePage from "./Profile/index";
 import HomePage from "./Home/index";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer"; // Import the Footer component
 import PublicationsPage from "./Publications/index";
 import ProjectsPage from "./Projects/index";
 import PublicationDetail from "./Publications/PublicationDetail";
@@ -38,6 +39,7 @@ function App() {
               <>
                 <Navbar />
                 <HomePage />
+                <Footer />
               </>
             }
           />
@@ -47,6 +49,7 @@ function App() {
               <>
                 <Navbar />
                 <ProfilePage />
+                <Footer />
               </>
             }
           />
@@ -56,6 +59,7 @@ function App() {
               <>
                 <Navbar />
                 <PublicationsPage />
+                <Footer />
               </>
             }
           />
@@ -65,6 +69,7 @@ function App() {
               <>
                 <Navbar />
                 <PublicationDetail />
+                <Footer />
               </>
             }
           />
@@ -74,6 +79,7 @@ function App() {
               <>
                 <Navbar />
                 <ProjectsPage />
+                <Footer />
               </>
             }
           />
@@ -83,6 +89,7 @@ function App() {
               <>
                 <Navbar />
                 <NewsList />
+                <Footer />
               </>
             }
           />
@@ -92,6 +99,7 @@ function App() {
               <>
                 <Navbar />
                 <NewsDetail />
+                <Footer />
               </>
             }
           />
@@ -196,6 +204,7 @@ function App() {
               <>
                 <Navbar />
                 <NotFound />
+                <Footer />
               </>
             }
           />

@@ -54,17 +54,6 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Scrollable Publications Section */}
-        {loading ? (
-          <p>Loading...</p>
-        ) : (
-          <ScrollableSection
-            title="Latest Publications"
-            content={researchData}
-            viewAllLink="/publications"
-          />
-        )}
-
         {/* News Section */}
         {loading ? (
           <p>Loading...</p>
@@ -73,6 +62,17 @@ const HomePage = () => {
             title="Latest News & Updates"
             content={newsData}
             viewAllLink="/news"
+          />
+        )}
+
+        {/* Scrollable Publications Section */}
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <ScrollableSection
+            title="Latest Publications"
+            content={researchData}
+            viewAllLink="/publications"
           />
         )}
       </div>

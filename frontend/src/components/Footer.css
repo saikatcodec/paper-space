@@ -1,0 +1,92 @@
+.site-footer {
+    background-color: #26272b;
+    padding: 45px 0 20px;
+    font-size: 15px;
+    line-height: 24px;
+    color: #737373;
+    margin-top: 50px;
+}
+
+.site-footer .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.footer-section {
+    width: 45%;
+    margin-bottom: 20px;
+}
+
+.footer-section h2 {
+    color: #fff;
+    font-size: 18px;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+    font-weight: 500;
+    position: relative;
+}
+
+.footer-section p {
+    margin-bottom: 15px;
+}
+
+.footer-section.about .contact {
+    margin-bottom: 15px;
+}
+
+.footer-section.about .socials a {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    margin-right: 10px;
+    color: #fff;
+    border-radius: 50%;
+    background-color: #33353d;
+    transition: all 0.3s ease;
+}
+
+.footer-section.about .socials a:hover {
+    background-color: #3a9bdc;
+}
+
+.footer-section.links ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section.links ul li {
+    padding: 4px 0;
+}
+
+.footer-section.links ul li a {
+    color: #737373;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.footer-section.links ul li a:hover {
+    color: #3a9bdc;
+    padding-left: 5px;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #444;
+}
+
+@media (max-width: 767px) {
+    .footer-section {
+        width: 100%;
+    }
+}

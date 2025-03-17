@@ -52,12 +52,24 @@ class Reference(BaseModel):
 class PaperCreate(BaseModel):
     title: str
     abstract: str | None = None
-    citation_count: str
-    read_count: str
+    citation_count: str | None = None
+    read_count: str | None = None
     pub_date: str
     link: str
     authors: list[str]
     references: list[Reference] | None = None
+    types: list[str] | None = None
+
+
+class PaperUpdate(BaseModel):
+    title: str | None = None
+    abstract: str | None = None
+    citation_count: str | None = None
+    read_count: str | None = None
+    pub_date: str | None = None
+    link: str | None = None
+    authors: list[str] | None = None
+    types: list[str] | None = None
 
 
 class Token(BaseModel):

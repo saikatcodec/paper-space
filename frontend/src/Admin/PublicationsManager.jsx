@@ -63,7 +63,7 @@ const PublicationsManager = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this publication?")) {
       try {
-        await api.delete(`/admin/publications/${id}`);
+        await api.delete(`/admin/delete/paper/${id}`);
         setPublications(publications.filter((pub) => pub.id !== id));
       } catch (err) {
         console.error("Error deleting publication:", err);
@@ -265,12 +265,6 @@ const PublicationsManager = () => {
                   scope="col"
                   className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  Citations
-                </th>
-                <th
-                  scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
                   Actions
                 </th>
               </tr>
@@ -307,9 +301,6 @@ const PublicationsManager = () => {
                       <div className="text-sm text-gray-900">
                         {publication.pub_date_str || "N/A"}
                       </div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {publication.times_cited || 0}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <div className="flex space-x-2">
@@ -371,7 +362,7 @@ const PublicationsManager = () => {
               ) : (
                 <tr>
                   <td
-                    colSpan="5"
+                    colSpan="4"
                     className="px-6 py-4 text-center text-sm text-gray-500"
                   >
                     No publications found

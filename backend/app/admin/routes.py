@@ -7,7 +7,6 @@ from jose import JWTError, jwt
 from app.admin.services import Services
 
 from sqlmodel.ext.asyncio.session import AsyncSession
-from sqlalchemy.orm import sessionmaker
 from starlette import status
 from sqlmodel import select
 
@@ -22,6 +21,7 @@ from app.admin.schemas import (
     Publications as PublicationCreate,
     ProfileCreate,
     PaperCreate,
+    PaperUpdate,
 )
 from app.admin.auth import (
     SECRET_KEY,
@@ -504,6 +504,78 @@ async def add_paper_direct(
         raise
     except Exception as e:
         print(f"Error adding paper details: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.patch("/update/paper/{paper_id}")
+async def update_paper(
+    paper_id: str,
+    paper_data: PaperUpdate,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Update paper details directly from JSON payload.
+    """
+    try:
+        paper_db = await session.get(Paper, paper_id)
+        pub_db = await session.get(Publications, paper_id)
+        if not paper_db or not pub_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Paper not found"
+            )
+
+        pub_data = paper_data.model_dump(exclude_unset=True)
+        if paper_data.pub_date:
+            pub_data["pub_date"] = parse_date(paper_data.pub_date)
+            pub_data["pub_date_str"] = paper_data.pub_date
+        pub_db.sqlmodel_update(pub_data)
+        session.add(pub_db)
+        await session.commit()
+        await session.refresh(pub_db)
+
+        paper_data = paper_data.model_dump(exclude_unset=True)
+        paper_db.sqlmodel_update(paper_data)
+        session.add(paper_db)
+        await session.commit()
+        await session.refresh(paper_db)
+
+        return {"msg": "Paper Updated Successfully", "data": paper_db}
+    except Exception as e:
+        print(f"Error updating paper: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="Internal Server Error",
+        )
+
+
+@admin_router.delete("/delete/paper/{paper_id}")
+async def delete_paper(
+    paper_id: str,
+    session: AsyncSession = Depends(get_session),
+    current_admin: AdminUser = Depends(get_current_admin),
+):
+    """
+    Delete paper details directly from JSON payload.
+    """
+    try:
+        paper_db = await session.get(Paper, paper_id)
+        pub_db = await session.get(Publications, paper_id)
+        if not paper_db or not pub_db:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="Paper not found"
+            )
+
+        await session.delete(paper_db)
+        await session.delete(pub_db)
+        await session.commit()
+
+        return {"msg": "Paper Deleted Successfully", "data": paper_db}
+    except Exception as e:
+        print(f"Error deleting paper: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail="Internal Server Error",

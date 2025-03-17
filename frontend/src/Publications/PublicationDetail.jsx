@@ -67,7 +67,7 @@ const PublicationDetail = () => {
     : "No date available";
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-8 py-8 max-w-6xl">
       {/* Breadcrumb */}
       <div className="mb-6">
         <button
@@ -197,7 +197,7 @@ const PublicationDetail = () => {
               <h2 className="text-lg font-semibold text-gray-800 mb-2">
                 References ({paper.references.length})
               </h2>
-              <div className="bg-gray-50 p-4 rounded-md max-h-60 overflow-y-auto">
+              <div className="bg-gray-50 p-4 rounded-md">
                 <ol className="list-decimal pl-5">
                   {paper.references.map((reference, index) => (
                     <li key={index} className="mb-2 text-sm text-gray-700">

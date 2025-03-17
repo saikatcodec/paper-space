@@ -12,7 +12,7 @@ const PublicationEditor = () => {
     title: "",
     authors: "",
     abstract: "",
-    pub_date_str: "",
+    pub_date: "",
     link: "",
     types: [],
     // Removed publication, doi, and keywords fields
@@ -46,7 +46,7 @@ const PublicationEditor = () => {
             title: publication.title || "",
             authors: publication.authors?.join(", ") || "",
             abstract: publication.abstract || "",
-            pub_date_str: publication.pub_date_str || "",
+            pub_date: publication.pub_date || "",
             link: publication.link || "",
             types: publication.types || [],
             // Removed publication, doi, and keywords fields
@@ -96,9 +96,9 @@ const PublicationEditor = () => {
       };
 
       if (isEditMode) {
-        await api.put(`/admin/publications/${id}`, publicationData);
+        await api.patch(`/admin/update/paper/${id}`, publicationData);
       } else {
-        await api.post("/admin/publications", publicationData);
+        await api.post("/admin/direct/add_paper", publicationData);
       }
 
       navigate("/admin/publications");
@@ -160,7 +160,7 @@ const PublicationEditor = () => {
                     value={formData.title}
                     onChange={handleChange}
                     required
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="mt-1 px-4 py-3 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md"
                   />
                 </div>
 
@@ -179,7 +179,7 @@ const PublicationEditor = () => {
                     onChange={handleChange}
                     required
                     placeholder="John Doe, Jane Smith, etc."
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="mt-1 px-4 py-3 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md"
                   />
                 </div>
 
@@ -196,26 +196,26 @@ const PublicationEditor = () => {
                     rows={4}
                     value={formData.abstract}
                     onChange={handleChange}
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border border-gray-300 rounded-md"
+                    className="mt-1 px-4 py-3 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md"
                     placeholder="Enter the abstract of your publication"
                   />
                 </div>
 
                 <div className="col-span-6 sm:col-span-3">
                   <label
-                    htmlFor="pub_date_str"
+                    htmlFor="pub_date"
                     className="block text-sm font-medium text-gray-700"
                   >
                     Publication Date
                   </label>
                   <input
                     type="text"
-                    name="pub_date_str"
-                    id="pub_date_str"
-                    value={formData.pub_date_str}
+                    name="pub_date"
+                    id="pub_date"
+                    value={formData.pub_date}
                     onChange={handleChange}
                     placeholder="e.g., January 2023"
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="mt-1 px-4 py-3 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md"
                   />
                 </div>
 
@@ -233,7 +233,7 @@ const PublicationEditor = () => {
                     value={formData.link}
                     onChange={handleChange}
                     placeholder="https://"
-                    className="mt-1 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                    className="mt-1 px-4 py-3 focus:ring-blue-500 focus:border-blue-500 block w-full shadow-sm text-base border-gray-300 rounded-md"
                   />
                 </div>
 
@@ -250,7 +250,7 @@ const PublicationEditor = () => {
                           type="checkbox"
                           checked={formData.types.includes(type)}
                           onChange={() => handleTypeChange(type)}
-                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                          className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                         />
                         <label
                           htmlFor={`type-${type}`}

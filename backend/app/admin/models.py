@@ -37,8 +37,8 @@ class Paper(SQLModel, table=True):
     title: str
     abstract: str | None = None
     link: str
-    citation_count: str
-    read_count: str
+    citation_count: str | None = None
+    read_count: str | None = None
     pub_date: str
     authors: list[str] = Field(sa_column=Column(JSON, default=list, nullable=False))
     references: list[dict] = Field(sa_column=Column(JSON, default=list, nullable=True))

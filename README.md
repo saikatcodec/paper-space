@@ -31,7 +31,7 @@ Contributions are welcome! Please follow these steps:
 5. Open a pull request
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for more details.
+This project is licensed under the MIT License. See the [LICENSE](https://github.com/saikatcodec/paper-space/blob/main/LICENSE) file for more details.
 
 ### Contact
 For questions or suggestions, please open an issue or contact [@saikatcodec](https://github.com/saikatcodec/paper-space).

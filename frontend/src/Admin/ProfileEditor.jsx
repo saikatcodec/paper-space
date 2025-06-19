@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import AdminLayout from "./components/AdminLayout";
 import api from "../utils/api";
 import { usePageTitle } from "../hooks/usePageTitle";

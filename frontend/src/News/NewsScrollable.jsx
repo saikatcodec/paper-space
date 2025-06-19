@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import NewsScrollable from "../News/NewsScrollable";
 import api from "../api"; // Assuming you have an api module for making HTTP requests

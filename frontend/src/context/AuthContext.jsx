@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import { createContext, useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+
+import { API_URL } from "../utils/api";
 
 const AuthContext = createContext(null);
 
@@ -29,15 +30,11 @@ export const AuthProvider = ({ children }) => {
       formData.append("username", username);
       formData.append("password", password);
 
-      const response = await axios.post(
-        "http://127.0.0.1:8000/admin/login",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${API_URL}/admin/login`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       const { access_token, refresh_token } = response.data;
 
@@ -68,7 +65,7 @@ export const AuthProvider = ({ children }) => {
         return false;
       }
 
-      const response = await axios.post("http://127.0.0.1:8000/admin/refresh", {
+      const response = await axios.post(`${API_URL}/admin/refresh`, {
         refresh_token: refreshToken,
       });
 

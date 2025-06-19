@@ -1,8 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useAuth } from "../context/AuthContext";
 import AdminLayout from "./components/AdminLayout";
 import { usePageTitle } from "../hooks/usePageTitle";
+
+import { API_URL } from "../utils/api";
 
 const Crawler = () => {
   const [url, setUrl] = useState("");
@@ -22,7 +24,7 @@ const Crawler = () => {
     try {
       const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        "http://127.0.0.1:8000/admin/add_all_research",
+        `${API_URL}/admin/add_all_research`,
         { url },
         {
           headers: {
@@ -40,7 +42,7 @@ const Crawler = () => {
           try {
             const token = localStorage.getItem("accessToken");
             const response = await axios.post(
-              "http://127.0.0.1:8000/admin/add_all_research",
+              `${API_URL}/admin/add_all_research`,
               { url },
               {
                 headers: {

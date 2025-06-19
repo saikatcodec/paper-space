@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { usePageTitle } from "../hooks/usePageTitle";
 
 import ScrollableSection from "../components/Scrollable";
 import homeCover from "../assets/home_cover.png";
 import NewsScrollable from "../components/NewsScrollable";
+import { API_URL } from "../utils/api";
 
 const HomePage = () => {
   usePageTitle("Research Home");
@@ -18,8 +19,8 @@ const HomePage = () => {
     const fetchData = async () => {
       try {
         const [researchResponse, newsResponse] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/user/get_all_research"),
-          axios.get("http://127.0.0.1:8000/user/news"),
+          axios.get(`${API_URL}/user/get_all_research`),
+          axios.get(`${API_URL}/user/news`),
         ]);
 
         setResearchData(researchResponse.data);

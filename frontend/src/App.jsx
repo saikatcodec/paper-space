@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import ProfilePage from "./Profile/index";
@@ -13,7 +12,6 @@ import NewsDetail from "./News/NewsDetail";
 import NotFound from "./components/NotFound"; // Import the NotFound component
 
 // Admin components
-import AdminLayout from "./Admin/components/AdminLayout";
 import AdminLogin from "./Admin/Login";
 import AdminDashboard from "./Admin/Dashboard";
 import Crawler from "./Admin/Crawler";

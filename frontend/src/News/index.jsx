@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+
+import { API_URL } from "../utils/api";
 
 const News = () => {
   const [newsData, setNewsData] = useState([]);
@@ -11,7 +13,7 @@ const News = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:8000/user/news");
+        const response = await axios.get(`${API_URL}/user/news`);
         setNewsData(response.data);
       } catch (error) {
         console.error("Error fetching news:", error);

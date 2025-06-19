@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { usePageTitle } from "../hooks/usePageTitle";
 
 import StackCard from "../components/StackCard";
+import { API_URL } from "../utils/api";
 
 const Publication = () => {
   usePageTitle("Research Publications");
@@ -28,9 +29,7 @@ const Publication = () => {
     // Fetch data from the API
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/user/get_all_research"
-        );
+        const response = await axios.get(`${API_URL}/user/get_all_research`);
         setResearchData(response.data);
         setFilteredData(response.data);
       } catch (error) {

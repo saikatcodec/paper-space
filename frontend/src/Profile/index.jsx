@@ -1,7 +1,9 @@
 // Import necessary modules
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { usePageTitle } from "../hooks/usePageTitle";
+
+import { API_URL } from "../utils/api";
 
 const ProfilePage = () => {
   usePageTitle("Researcher Profile");
@@ -13,9 +15,7 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await axios.get(
-          "http://127.0.0.1:8000/user/get_profile"
-        );
+        const response = await axios.get(`${API_URL}/user/get_profile`);
         setProfile(response.data);
         setLoading(false);
       } catch (err) {
